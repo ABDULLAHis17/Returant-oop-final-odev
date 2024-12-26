@@ -1,0 +1,6 @@
+C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantLibrary\bin\Debug\RestaurantLibrary.dll
+C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantLibrary\bin\Debug\RestaurantLibrary.pdb
+C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantLibrary\obj\Debug\RestaurantLibrary.csproj.AssemblyReference.cache
+C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantLibrary\obj\Debug\RestaurantLibrary.csproj.CoreCompileInputs.cache
+C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantLibrary\obj\Debug\RestaurantLibrary.dll
+C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantLibrary\obj\Debug\RestaurantLibrary.pdb
