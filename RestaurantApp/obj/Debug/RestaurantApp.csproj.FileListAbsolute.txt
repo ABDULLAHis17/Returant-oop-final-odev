@@ -8,13 +8,13 @@ C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantApp\obj\Debug\RestaurantAp
 C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.CopyComplete
 C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.exe
 C:\Users\MONSTER\source\repos\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.pdb
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\bin\Debug\RestaurantApp.exe.config
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\bin\Debug\RestaurantApp.exe
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\bin\Debug\RestaurantApp.pdb
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\bin\Debug\RestaurantLibrary.dll
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\bin\Debug\RestaurantLibrary.pdb
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.AssemblyReference.cache
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.CoreCompileInputs.cache
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.CopyComplete
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.exe
-C:\Users\MONSTER\Desktop\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.pdb
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.AssemblyReference.cache
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.CoreCompileInputs.cache
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.exe
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.pdb
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\bin\Debug\RestaurantApp.exe.config
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\bin\Debug\RestaurantApp.exe
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\bin\Debug\RestaurantApp.pdb
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\bin\Debug\RestaurantLibrary.dll
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\bin\Debug\RestaurantLibrary.pdb
+C:\Users\MONSTER\Desktop\nesneye yonelik\RestaurantApp\RestaurantApp\obj\Debug\RestaurantApp.csproj.CopyComplete

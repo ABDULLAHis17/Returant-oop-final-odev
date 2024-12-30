@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="drink_class.cs" />
+    <Compile Include="food_class.cs" />
+    <Compile Include="MenuItem_class.cs" />
     <Compile Include="RestaurantLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

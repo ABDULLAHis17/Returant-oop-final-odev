@@ -1,0 +1,2 @@
+Food|Pizza|200|cheese|is delishez|516|4
+Food|doner|64.0|tavuk|lezzetli|10|5

@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RestaurantApp
+namespace RestaurantSystem
 {
     class Program
     {
+        static string dataFilePath = "orderData.txt";
+        static bool isStudent = false; // Flag to determine if the user is a student
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Restaurant System!");
 
-            RestaurantLibrary.Order order = new RestaurantLibrary.Order();
+            // Ask if the user is a student
+            isStudent = IsStudent();
 
-            order.AddItem(new RestaurantLibrary.Food("Burger", 150, "Meat, tomato, potato and cheese"));
-
-            order.AddItem(new RestaurantLibrary.Drink("coca cola", 30, false));
+            // Load existing order or create a new one
+            RestaurantLibrary.Order order = LoadOrder();
 
             while (true)
             {
@@ -24,7 +26,12 @@ namespace RestaurantApp
                 Console.WriteLine("1. Add Food");
                 Console.WriteLine("2. Add Drink");
                 Console.WriteLine("3. View Order");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("4. View Order by Type");
+                Console.WriteLine("5. Search for an Item");
+                Console.WriteLine("6. Remove Item");
+                Console.WriteLine("7. Most Purchased Items");
+                Console.WriteLine("8. Calculate Total");
+                Console.WriteLine("9. Exit");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -32,29 +39,30 @@ namespace RestaurantApp
                 switch (choice)
                 {
                     case "1":
-                        Console.Write("Enter food name: ");
-                        string foodName = Console.ReadLine();
+                        string foodName = GetValidText("Enter food name: ");
+                        decimal foodPrice = GetValidDecimal("Enter food price: ");
+                        string ingredients = GetValidText("Enter food ingredients: ");
+                        string foodDescription = GetValidText("Enter a description for the food: ");
+                        int foodQuantity = GetValidInt("Enter food quantity: ");
+                        double foodRating = GetValidDouble("Enter food rating (0-5): ");
 
-                        Console.Write("Enter food price: ");
-                        decimal foodPrice = decimal.Parse(Console.ReadLine());
+                        if (isStudent)
+                        {
+                            foodPrice *= 0.8m; // Apply 20% discount
+                        }
 
-                        Console.Write("Enter food ingredients: ");
-                        string ingredients = Console.ReadLine();
-
-                        order.AddItem(new RestaurantLibrary.Food(foodName, foodPrice, ingredients));
+                        order.AddItem(new RestaurantLibrary.food_class(foodName, foodPrice, ingredients, foodDescription, foodQuantity, foodRating));
                         break;
 
                     case "2":
-                        Console.Write("Enter drink name: ");
-                        string drinkName = Console.ReadLine();
+                        string drinkName = GetValidText("Enter drink name: ");
+                        decimal drinkPrice = GetValidDecimal("Enter drink price: ");
+                        bool isAlcoholic = GetIsAlcoholic();
+                        string drinkDescription = GetValidText("Enter a description for the drink: ");
+                        int drinkQuantity = GetValidInt("Enter drink quantity: ");
+                        double drinkRating = GetValidDouble("Enter drink rating (0-5): ");
 
-                        Console.Write("Enter drink price: ");
-                        decimal drinkPrice = decimal.Parse(Console.ReadLine());
-
-                        Console.Write("Is the drink alcoholic? (yes/no): ");
-                        bool isAlcoholic = Console.ReadLine().ToLower() == "yes";
-
-                        order.AddItem(new RestaurantLibrary.Drink(drinkName, drinkPrice, isAlcoholic));
+                        order.AddItem(new RestaurantLibrary.drink_class(drinkName, drinkPrice, isAlcoholic, drinkDescription, drinkQuantity, drinkRating));
                         break;
 
                     case "3":
@@ -62,12 +70,198 @@ namespace RestaurantApp
                         break;
 
                     case "4":
+                        order.DisplayOrderByType();
+                        break;
+
+                    case "5":
+                        string searchName = GetValidText("Enter the name of the item to search: ");
+                        order.SearchItem(searchName);
+                        break;
+
+                    case "6":
+                        string itemName = GetValidText("Enter the name of the item to remove: ");
+                        bool removed = order.RemoveItem(itemName);
+                        if (removed)
+                        {
+                            Console.WriteLine($"{itemName} has been removed from the order.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Item '{itemName}' not found in the order.");
+                        }
+                        break;
+
+                    case "7":
+                        order.DisplayMostPurchasedItems();
+                        break;
+
+                    case "8":
+                        order.CalculateTotal(isStudent);
+                        break;
+
+                    case "9":
+                        SaveOrder(order);
                         Console.WriteLine("Thank you for using the Restaurant System!");
                         return;
 
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
                         break;
+                }
+            }
+        }
+
+        static bool IsStudent()
+        {
+            while (true)
+            {
+                Console.Write("Are you a student? (yes/no): ");
+                string input = Console.ReadLine().ToLower();
+
+                if (input == "yes")
+                {
+                    Console.WriteLine("Student discount will be applied to all foods.");
+                    return true;
+                }
+                else if (input == "no")
+                {
+                    Console.WriteLine("No discount will be applied.");
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                }
+            }
+        }
+
+        static void SaveOrder(RestaurantLibrary.Order order)
+        {
+            using (StreamWriter writer = new StreamWriter(dataFilePath))
+            {
+                foreach (var item in order.Items)
+                {
+                    if (item is RestaurantLibrary.food_class food)
+                    {
+                        writer.WriteLine($"Food|{food.Name}|{food.Price}|{food.Ingredients}|{food.Description}|{food.Quantity}|{food.Rating}");
+                    }
+                    else if (item is RestaurantLibrary.drink_class drink)
+                    {
+                        writer.WriteLine($"Drink|{drink.Name}|{drink.Price}|{(drink.IsAlcoholic ? "Alcoholic" : "Non-Alcoholic")}|{drink.Description}|{drink.Quantity}|{drink.Rating}");
+                    }
+                }
+            }
+            Console.WriteLine("Order saved successfully!");
+        }
+
+        static RestaurantLibrary.Order LoadOrder()
+        {
+            var order = new RestaurantLibrary.Order();
+
+            if (File.Exists(dataFilePath))
+            {
+                var lines = File.ReadAllLines(dataFilePath);
+                foreach (var line in lines)
+                {
+                    var parts = line.Split('|');
+                    if (parts.Length >= 7 && parts[0] == "Food")
+                    {
+                        order.AddItem(new RestaurantLibrary.food_class(parts[1], decimal.Parse(parts[2]), parts[3], parts[4], int.Parse(parts[5]), double.Parse(parts[6])));
+                    }
+                    else if (parts.Length >= 7 && parts[0] == "Drink")
+                    {
+                        order.AddItem(new RestaurantLibrary.drink_class(parts[1], decimal.Parse(parts[2]), parts[3] == "Alcoholic", parts[4], int.Parse(parts[5]), double.Parse(parts[6])));
+                    }
+                }
+            }
+
+            return order;
+        }
+
+        static string GetValidText(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (!string.IsNullOrWhiteSpace(input) && input.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+                {
+                    return input;
+                }
+
+                Console.WriteLine("Invalid input. Please enter a valid text without numbers or special characters.");
+            }
+        }
+
+        static decimal GetValidDecimal(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (decimal.TryParse(input, out decimal result) && result > 0)
+                {
+                    return result;
+                }
+
+                Console.WriteLine("Invalid input. Please enter a valid positive number.");
+            }
+        }
+
+        static int GetValidInt(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int result) && result > 0)
+                {
+                    return result;
+                }
+
+                Console.WriteLine("Invalid input. Please enter a valid positive integer.");
+            }
+        }
+
+        static double GetValidDouble(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (double.TryParse(input, out double result) && result >= 0 && result <= 5)
+                {
+                    return result;
+                }
+
+                Console.WriteLine("Invalid input. Please enter a number between 0 and 5.");
+            }
+        }
+
+        static bool GetIsAlcoholic()
+        {
+            while (true)
+            {
+                Console.Write("Is the drink alcoholic? (yes/no): ");
+                string input = Console.ReadLine().ToLower();
+
+                if (input == "yes")
+                {
+                    Console.WriteLine("The drink is alcoholic.");
+                    return true;
+                }
+                else if (input == "no")
+                {
+                    Console.WriteLine("The drink is non-alcoholic.");
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
                 }
             }
         }

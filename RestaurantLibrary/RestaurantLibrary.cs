@@ -1,91 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RestaurantLibrary
 {
-    // Interface for MenuItem
-    public interface IMenuItem
-    {
-        string Name { get; }
-        decimal Price { get; }
-        void DisplayDetails();
-    }
-
-    // Abstract class implementing the interface
-    public abstract class MenuItem : IMenuItem
-    {
-        public string Name { get; private set; }
-        public decimal Price { get; private set; }
-
-        protected MenuItem(string name, decimal price)
-        {
-            Name = name;
-            Price = price;
-        }
-
-        public abstract void DisplayDetails(); // Abstraction
-    }
-
-    // Inheritance and Polymorphism
-    public class Food : MenuItem
-    {
-        public string Ingredients { get; private set; }
-
-        public Food(string name, decimal price, string ingredients) : base(name, price)
-        {
-            Ingredients = ingredients;
-        }
-
-        public override void DisplayDetails()
-        {
-            Console.WriteLine($"Food: {Name}, Price: {Price:C}, Ingredients: {Ingredients}");
-        }
-    }
-
-    public class Drink : MenuItem
-    {
-        public bool IsAlcoholic { get; private set; }
-
-        public Drink(string name, decimal price, bool isAlcoholic) : base(name, price)
-        {
-            IsAlcoholic = isAlcoholic;
-        }
-
-        public override void DisplayDetails()
-        {
-            Console.WriteLine($"Drink: {Name}, Price: {Price:C}, Alcoholic: {IsAlcoholic}");
-        }
-    }
-
-    // Encapsulation
     public class Order
     {
-        private readonly List<IMenuItem> _items; // Dependency Inversion Principle
+        public List<MenuItem> Items { get; set; } = new List<MenuItem>();
 
-        public Order()
+        public void AddItem(MenuItem item)
         {
-            _items = new List<IMenuItem>();
+            Items.Add(item);
+            Console.WriteLine($"{item.Name} has been added to the order.");
         }
 
-        public void AddItem(IMenuItem item)
+        public bool RemoveItem(string name)
         {
-            _items.Add(item);
-        }
-
-        public void RemoveItem(IMenuItem item)
-        {
-            _items.Remove(item);
+            var item = Items.Find(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                Items.Remove(item);
+                return true;
+            }
+            return false;
         }
 
         public void DisplayOrder()
         {
-            Console.WriteLine("\nOrder Summary:");
-            foreach (var item in _items)
+            Console.WriteLine("\nYour Order:");
+            if (Items.Count == 0)
+            {
+                Console.WriteLine("No items in the order.");
+                return;
+            }
+
+            foreach (var item in Items)
             {
                 item.DisplayDetails();
             }
+        }
 
-            Console.WriteLine($"Total: {_items.Count} items\n");
+        public void DisplayOrderByType()
+        {
+            Console.WriteLine("\nYour Order by Type:");
+
+            var foods = Items.OfType<food_class>().ToList();
+            var drinks = Items.OfType<drink_class>().ToList();
+
+            if (foods.Count > 0)
+            {
+                Console.WriteLine("\nFoods:");
+                foreach (var food in foods)
+                {
+                    food.DisplayDetails();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No foods in the order.");
+            }
+
+            if (drinks.Count > 0)
+            {
+                Console.WriteLine("\nDrinks:");
+                foreach (var drink in drinks)
+                {
+                    drink.DisplayDetails();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No drinks in the order.");
+            }
+        }
+
+        public void SearchItem(string name)
+        {
+            var item = Items.Find(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                Console.WriteLine("Item Found:");
+                item.DisplayDetails();
+            }
+            else
+            {
+                Console.WriteLine($"Item '{name}' not found.");
+            }
+        }
+
+        public void DisplayMostPurchasedItems()
+        {
+            if (Items.Count == 0)
+            {
+                Console.WriteLine("No items in the order to display.");
+                return;
+            }
+
+            Console.WriteLine("\nMost Purchased Items:");
+            var sortedItems = Items.OrderByDescending(i => i.Quantity).Take(3);
+
+            foreach (var item in sortedItems)
+            {
+                Console.WriteLine($"{item.Name}: {item.Quantity} purchased");
+            }
+        }
+
+        public void CalculateTotal(bool isStudent)
+        {
+            decimal total = 0;
+
+            foreach (var item in Items)
+            {
+                if (item is food_class && isStudent)
+                {
+                    total += item.Price * item.Quantity; // Discount already applied
+                }
+                else
+                {
+                    total += item.Price * item.Quantity;
+                }
+            }
+
+            Console.WriteLine($"\nTotal Order Price: ${total}");
         }
     }
 }
